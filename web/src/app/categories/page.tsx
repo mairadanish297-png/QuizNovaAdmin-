@@ -1,112 +1,169 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Plus, Trash2, Edit, FolderPlus, BookPlus, RefreshCw } from "lucide-react";
+import { Plus, Trash2, Edit, FolderPlus, Wrench, RefreshCw, Image as ImageIcon, Sparkles } from "lucide-react";
 
 interface Category {
   id: string;
   name: string;
-  iconUrl?: string;
-  order?: number;
-}
-
-interface Book {
-  id: string;
-  categoryId: string;
-  title: string;
-  coverUrl?: string;
-  author?: string;
+  imageUrl?: string;
+  icon?: string;
+  description?: string;
+  color?: string;
+  categoryColor?: string;
+  emoji?: string;
+  categoryEmoji?: string;
+  type?: string;
+  quizType?: string;
+  mediaType?: string;
 }
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fixing, setFixing] = useState(false);
 
-  // Modals state
-  const [showCatModal, setShowCatModal] = useState(false);
-  const [catName, setCatName] = useState("");
-  const [catIcon, setCatIcon] = useState("");
+  // Add / Edit Category Modal
+  const [showModal, setShowModal] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  const [showBookModal, setShowBookModal] = useState(false);
-  const [selectedCatId, setSelectedCatId] = useState("");
-  const [bookTitle, setBookTitle] = useState("");
-  const [bookCover, setBookCover] = useState("");
+  const [name, setName] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [description, setDescription] = useState("");
+  const [color, setColor] = useState("#6200EE");
+  const [emoji, setEmoji] = useState("📝");
+  const [mediaType, setMediaType] = useState("text"); // text, image, audio, video
 
   useEffect(() => {
-    fetchData();
+    fetchCategories();
   }, []);
 
-  const fetchData = async () => {
+  const fetchCategories = async () => {
     setLoading(true);
     try {
-      const catSnap = await getDocs(collection(db, "categories"));
-      const bookSnap = await getDocs(collection(db, "books"));
-
-      const catsList = catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Category[];
-      const booksList = bookSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Book[];
-
-      setCategories(catsList);
-      setBooks(booksList);
+      const snap = await getDocs(collection(db, "categories"));
+      const list = snap.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name || doc.id,
+          imageUrl: data.imageUrl || data.icon || "",
+          icon: data.icon || data.imageUrl || "",
+          description: data.description || "",
+          color: data.color || data.categoryColor || "#6200EE",
+          emoji: data.emoji || data.categoryEmoji || "📝",
+          type: data.type || data.quizType || "text quiz",
+          quizType: data.quizType || data.type || "text quiz",
+          mediaType: data.mediaType || "text",
+        } as Category;
+      });
+      setCategories(list);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching categories:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddCategory = async (e: React.FormEvent) => {
+  const handleOpenAdd = () => {
+    setEditingId(null);
+    setName("");
+    setImageUrl("");
+    setDescription("");
+    setColor("#6200EE");
+    setEmoji("📝");
+    setMediaType("text");
+    setShowModal(true);
+  };
+
+  const handleOpenEdit = (cat: Category) => {
+    setEditingId(cat.id);
+    setName(cat.name);
+    setImageUrl(cat.imageUrl || "");
+    setDescription(cat.description || "");
+    setColor(cat.color || "#6200EE");
+    setEmoji(cat.emoji || "📝");
+    setMediaType(cat.mediaType || "text");
+    setShowModal(true);
+  };
+
+  const handleSaveCategory = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!catName.trim()) return;
+    if (!name.trim()) return;
+
+    const quizType = `${mediaType} quiz`;
+    const mainId = mediaType === "image" ? 2 : mediaType === "audio" ? 3 : mediaType === "video" ? 4 : 1;
+    const mainIdStr = mainId.toString();
+
+    const catData = {
+      name,
+      imageUrl,
+      icon: imageUrl,
+      description,
+      color,
+      categoryColor: color,
+      emoji,
+      categoryEmoji: emoji,
+      type: quizType,
+      quizType,
+      category_type: quizType,
+      quiz_type: mediaType,
+      mediaType,
+      main_id: mainId,
+      mainId,
+      type_id: mainIdStr,
+      main_id_str: mainIdStr,
+      updatedAt: new Date().toISOString(),
+    };
 
     try {
-      await addDoc(collection(db, "categories"), {
-        name: catName,
-        iconUrl: catIcon || "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=200",
-        createdAt: new Date().toISOString(),
-      });
-      setCatName("");
-      setCatIcon("");
-      setShowCatModal(false);
-      fetchData();
+      const docId = editingId || name;
+      await setDoc(doc(db, "categories", docId), catData, { merge: true });
+      setShowModal(false);
+      fetchCategories();
     } catch (err) {
-      console.error("Error adding category:", err);
+      console.error("Error saving category:", err);
     }
   };
 
-  const handleAddBook = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!bookTitle.trim() || !selectedCatId) return;
-
-    try {
-      await addDoc(collection(db, "books"), {
-        categoryId: selectedCatId,
-        title: bookTitle,
-        coverUrl: bookCover || "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200",
-        createdAt: new Date().toISOString(),
-      });
-      setBookTitle("");
-      setBookCover("");
-      setShowBookModal(false);
-      fetchData();
-    } catch (err) {
-      console.error("Error adding book:", err);
-    }
-  };
-
-  const handleDeleteCategory = async (id: string) => {
-    if (confirm("Are you sure you want to delete this category?")) {
+  const handleDelete = async (id: string) => {
+    if (confirm(`Are you sure you want to delete category "${id}"?`)) {
       await deleteDoc(doc(db, "categories", id));
-      fetchData();
+      fetchCategories();
     }
   };
 
-  const handleDeleteBook = async (id: string) => {
-    if (confirm("Are you sure you want to delete this book?")) {
-      await deleteDoc(doc(db, "books", id));
-      fetchData();
+  const handleFixCategories = async () => {
+    setFixing(true);
+    try {
+      const snap = await getDocs(collection(db, "categories"));
+      for (const catDoc of snap.docs) {
+        const d = catDoc.data();
+        const raw = d.type || d.mediaType || d.quizType || "text";
+        const norm = raw.toLowerCase().replace(" quiz", "");
+        const media = norm === "image" ? "image" : norm === "audio" ? "audio" : norm === "video" ? "video" : "text";
+        const mainId = media === "image" ? 2 : media === "audio" ? 3 : media === "video" ? 4 : 1;
+
+        await setDoc(doc(db, "categories", catDoc.id), {
+          type: `${media} quiz`,
+          quizType: `${media} quiz`,
+          category_type: `${media} quiz`,
+          quiz_type: media,
+          mediaType: media,
+          main_id: mainId,
+          mainId: mainId,
+          type_id: mainId.toString(),
+          main_id_str: mainId.toString(),
+        }, { merge: true });
+      }
+      alert("Categories schema migrated and fixed successfully!");
+      fetchCategories();
+    } catch (err) {
+      alert("Fix failed: " + err);
+    } finally {
+      setFixing(false);
     }
   };
 
@@ -114,129 +171,212 @@ export default function CategoriesPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Categories & Books</h1>
-          <p className="text-slate-500 text-sm mt-1">Organize quiz topics and underlying books</p>
+          <h1 className="text-3xl font-bold text-slate-900">Categories Management</h1>
+          <p className="text-slate-500 text-sm mt-1">Manage quiz categories, icons, colors, emojis and quiz types</p>
         </div>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setShowCatModal(true)}
+            onClick={handleFixCategories}
+            disabled={fixing}
+            className="bg-slate-800 hover:bg-slate-700 text-white font-medium px-4 py-2.5 rounded-xl shadow-md transition-all flex items-center gap-2 text-sm disabled:opacity-50"
+          >
+            <Wrench className="w-4 h-4 text-amber-400" />
+            {fixing ? "Fixing Schema..." : "Fix Categories Schema"}
+          </button>
+          <button
+            onClick={handleOpenAdd}
             className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2.5 rounded-xl shadow-md transition-all flex items-center gap-2 text-sm"
           >
             <FolderPlus className="w-4 h-4" />
-            Add Category
-          </button>
-          <button
-            onClick={() => setShowBookModal(true)}
-            className="bg-slate-900 hover:bg-slate-800 text-white font-medium px-4 py-2.5 rounded-xl shadow-md transition-all flex items-center gap-2 text-sm"
-          >
-            <BookPlus className="w-4 h-4" />
-            Add Book
+            Add New Category
           </button>
         </div>
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center p-12 text-slate-400">
-          <RefreshCw className="w-6 h-6 animate-spin mr-2" /> Loading data...
+          <RefreshCw className="w-6 h-6 animate-spin mr-2" /> Loading categories...
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Categories List */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center justify-between">
-              <span>Categories ({categories.length})</span>
-            </h2>
-            <div className="divide-y divide-slate-100">
-              {categories.map((cat) => (
-                <div key={cat.id} className="py-3 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <img src={cat.iconUrl} alt={cat.name} className="w-10 h-10 rounded-xl object-cover bg-slate-100 border" />
-                    <div>
-                      <p className="font-semibold text-slate-800">{cat.name}</p>
-                      <p className="text-xs text-slate-400">ID: {cat.id}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((cat) => (
+            <div
+              key={cat.id}
+              className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all space-y-4 relative overflow-hidden"
+            >
+              <div
+                className="h-2 absolute top-0 left-0 right-0"
+                style={{ backgroundColor: cat.color || "#6200EE" }}
+              />
+
+              <div className="flex items-start justify-between gap-3 pt-2">
+                <div className="flex items-center gap-3">
+                  {cat.imageUrl ? (
+                    <img
+                      src={cat.imageUrl}
+                      alt={cat.name}
+                      className="w-12 h-12 rounded-xl object-cover border bg-slate-50 shadow-sm"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-sm"
+                      style={{ backgroundColor: (cat.color || "#6200EE") + "20" }}
+                    >
+                      {cat.emoji || "📝"}
                     </div>
+                  )}
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-lg flex items-center gap-2">
+                      <span>{cat.emoji}</span>
+                      <span>{cat.name}</span>
+                    </h3>
+                    <span className="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md font-semibold border border-indigo-100">
+                      {cat.type || "text quiz"}
+                    </span>
                   </div>
+                </div>
+
+                <div className="flex items-center gap-1">
                   <button
-                    onClick={() => handleDeleteCategory(cat.id)}
-                    className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                    onClick={() => handleOpenEdit(cat)}
+                    className="p-1.5 text-slate-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(cat.id)}
+                    className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-              ))}
-              {categories.length === 0 && (
-                <p className="text-slate-400 text-sm py-4 text-center">No categories found.</p>
-              )}
-            </div>
-          </div>
+              </div>
 
-          {/* Books List */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center justify-between">
-              <span>Books ({books.length})</span>
-            </h2>
-            <div className="divide-y divide-slate-100">
-              {books.map((b) => {
-                const cat = categories.find((c) => c.id === b.categoryId);
-                return (
-                  <div key={b.id} className="py-3 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <img src={b.coverUrl} alt={b.title} className="w-10 h-12 rounded-lg object-cover bg-slate-100 border" />
-                      <div>
-                        <p className="font-semibold text-slate-800">{b.title}</p>
-                        <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md font-medium">
-                          {cat?.name || "Uncategorized"}
-                        </span>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleDeleteBook(b.id)}
-                      className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                );
-              })}
-              {books.length === 0 && (
-                <p className="text-slate-400 text-sm py-4 text-center">No books found.</p>
+              {cat.description && (
+                <p className="text-xs text-slate-500 line-clamp-2">{cat.description}</p>
               )}
+
+              <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-100">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: cat.color }} />
+                  <span>{cat.color}</span>
+                </div>
+                <span>Doc ID: {cat.id}</span>
+              </div>
             </div>
-          </div>
+          ))}
+
+          {categories.length === 0 && (
+            <div className="col-span-full py-12 text-center bg-white border border-slate-200 rounded-2xl">
+              <p className="text-slate-400">No categories found. Click "Add New Category" to create one.</p>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Add Category Modal */}
-      {showCatModal && (
+      {/* Add / Edit Category Modal */}
+      {showModal && (
         <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
-            <h3 className="text-xl font-bold text-slate-900">Add New Category</h3>
-            <form onSubmit={handleAddCategory} className="space-y-4">
+          <div className="bg-white rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl font-bold text-slate-900">
+              {editingId ? "Edit Category" : "Add New Category"}
+            </h3>
+
+            <form onSubmit={handleSaveCategory} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Category Name</label>
                 <input
                   type="text"
                   required
-                  value={catName}
-                  onChange={(e) => setCatName(e.target.value)}
-                  placeholder="e.g. Science & Tech"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Science, Biology, General Knowledge"
                   className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
               </div>
+
               <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Icon URL (Optional)</label>
+                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">
+                  Icon / Image URL
+                </label>
                 <input
                   type="url"
-                  value={catIcon}
-                  onChange={(e) => setCatIcon(e.target.value)}
-                  placeholder="https://..."
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="https://example.com/icon.png"
                   className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 />
+                {imageUrl && (
+                  <div className="mt-2 flex items-center gap-3 bg-slate-50 p-2 rounded-xl border">
+                    <img src={imageUrl} alt="Preview" className="w-10 h-10 rounded-lg object-cover" />
+                    <span className="text-xs text-slate-500">Image Preview</span>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center justify-end gap-3 pt-2">
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Category Color (Hex)</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={color}
+                      onChange={(e) => setColor(e.target.value)}
+                      className="w-10 h-10 rounded-xl border cursor-pointer p-0.5"
+                    />
+                    <input
+                      type="text"
+                      value={color}
+                      onChange={(e) => setColor(e.target.value)}
+                      className="flex-1 border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none uppercase font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Emoji Icon</label>
+                  <input
+                    type="text"
+                    value={emoji}
+                    onChange={(e) => setEmoji(e.target.value)}
+                    placeholder="📝"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center text-lg"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Quiz Media Type</label>
+                <select
+                  value={mediaType}
+                  onChange={(e) => setMediaType(e.target.value)}
+                  className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
+                >
+                  <option value="text">Text Quiz (Standard MCQs)</option>
+                  <option value="image">Image Quiz (Picture Questions)</option>
+                  <option value="audio">Audio Quiz (Sound / Voice Questions)</option>
+                  <option value="video">Video Quiz (Video Clip Questions)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Description (Optional)</label>
+                <textarea
+                  rows={2}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Short description of this category..."
+                  className="w-full border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t">
                 <button
                   type="button"
-                  onClick={() => setShowCatModal(false)}
+                  onClick={() => setShowModal(false)}
                   className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl"
                 >
                   Cancel
@@ -246,67 +386,6 @@ export default function CategoriesPage() {
                   className="px-5 py-2 text-sm bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-500 shadow-md"
                 >
                   Save Category
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Add Book Modal */}
-      {showBookModal && (
-        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
-            <h3 className="text-xl font-bold text-slate-900">Add New Book</h3>
-            <form onSubmit={handleAddBook} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Select Category</label>
-                <select
-                  required
-                  value={selectedCatId}
-                  onChange={(e) => setSelectedCatId(e.target.value)}
-                  className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
-                >
-                  <option value="">-- Choose Category --</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Book Title</label>
-                <input
-                  type="text"
-                  required
-                  value={bookTitle}
-                  onChange={(e) => setBookTitle(e.target.value)}
-                  placeholder="e.g. General Physics 101"
-                  className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Cover Image URL (Optional)</label>
-                <input
-                  type="url"
-                  value={bookCover}
-                  onChange={(e) => setBookCover(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                />
-              </div>
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowBookModal(false)}
-                  className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 text-sm bg-slate-900 text-white font-medium rounded-xl hover:bg-slate-800 shadow-md"
-                >
-                  Save Book
                 </button>
               </div>
             </form>
