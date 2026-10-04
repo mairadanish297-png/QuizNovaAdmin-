@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/includeHeader"
+        layout="@layout/include_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- Filter Tabs -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:background="@color/bg_surface"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:baselineAligned="false">
+        <TextView android:id="@+id/tabPending" android:text="@string/tab_pending"
+            android:textColor="@color/accent_gold" android:textSize="13sp"
+            android:textStyle="bold" android:background="@drawable/bg_card_accent"
+            android:paddingHorizontal="16dp" android:paddingVertical="8dp"
+            android:minHeight="48dp" android:gravity="center"
+            android:clickable="true" android:focusable="true"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <TextView android:id="@+id/tabApproved" android:text="@string/tab_approved"
+            android:textColor="@color/text_muted" android:textSize="13sp"
+            android:background="@drawable/bg_card_accent" android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp" android:layout_marginStart="8dp"
+            android:minHeight="48dp" android:gravity="center"
+            android:clickable="true" android:focusable="true"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <TextView android:id="@+id/tabRejected" android:text="@string/tab_rejected"
+            android:textColor="@color/text_muted" android:textSize="13sp"
+            android:background="@drawable/bg_card_accent" android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp" android:layout_marginStart="8dp"
+            android:minHeight="48dp" android:gravity="center"
+            android:clickable="true" android:focusable="true"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <View android:layout_width="0dp" android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <TextView android:id="@+id/tvTotalAmount"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/format_total_amount" android:textColor="@color/accent_gold"
+            android:textSize="12sp" android:textStyle="bold"/>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/msg_no_withdrawals"
+        android:textColor="@color/text_muted"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvWithdrawals"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="12dp"
+        android:clipToPadding="false"/>
+</LinearLayout>

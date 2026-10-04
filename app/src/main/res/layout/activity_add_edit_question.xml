@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    android:orientation="vertical"
+    tools:context=".AddEditQuestionActivity">
+
+    <include
+        android:id="@+id/includeHeader"
+        layout="@layout/include_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Category + Difficulty -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_category"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvCat"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_input"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:text="@string/default_category"
+                        android:textColor="@color/accent_gold"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_difficulty"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvDiff"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_input"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:text="@string/default_difficulty"
+                        android:textColor="@color/diff_easy"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ═══ QUIZ TYPE ═══ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QUIZ TYPE"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <RadioGroup
+                android:id="@+id/rgQuizType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_input"
+                android:padding="4dp">
+
+                <RadioButton
+                    android:id="@+id/rbText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Text"
+                    android:textSize="12sp"
+                    android:buttonTint="@color/accent_gold"
+                    android:textColor="@color/text_primary"
+                    android:checked="true"/>
+
+                <RadioButton
+                    android:id="@+id/rbImage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Image"
+                    android:textSize="12sp"
+                    android:buttonTint="@color/accent_gold"
+                    android:textColor="@color/text_primary"/>
+
+                <RadioButton
+                    android:id="@+id/rbAudio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Audio"
+                    android:textSize="12sp"
+                    android:buttonTint="@color/accent_gold"
+                    android:textColor="@color/text_primary"/>
+
+                <RadioButton
+                    android:id="@+id/rbVideo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Video"
+                    android:textSize="12sp"
+                    android:buttonTint="@color/accent_gold"
+                    android:textColor="@color/text_primary"/>
+            </RadioGroup>
+
+            <!-- ═══ ENGLISH SECTION ═══ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_english"
+                android:textColor="@color/accent_gold"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etQuestionEN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:hint="@string/hint_question_en"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:padding="14dp"
+                android:minLines="2"
+                android:inputType="textMultiLine|textCapSentences"
+                android:importantForAutofill="no"
+                tools:targetApi="o"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:baselineAligned="false">
+
+                <EditText
+                    android:id="@+id/etOptAEN"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/hint_option_a"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginEnd="4dp"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+
+                <EditText
+                    android:id="@+id/etOptBEN"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/hint_option_b"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginStart="4dp"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:baselineAligned="false">
+
+                <EditText
+                    android:id="@+id/etOptCEN"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/hint_option_c"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginEnd="4dp"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+
+                <EditText
+                    android:id="@+id/etOptDEN"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/hint_option_d"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginStart="4dp"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/etExplanationEN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:hint="@string/hint_explanation_en"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2"
+                android:importantForAutofill="no"
+                tools:targetApi="o"/>
+
+            <!-- ═══ URDU SECTION ═══ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_urdu"
+                android:textColor="@color/accent_gold"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etQuestionUR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:hint="@string/hint_question_ur"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:padding="14dp"
+                android:minLines="2"
+                android:inputType="textMultiLine"
+                android:textDirection="rtl"
+                android:importantForAutofill="no"
+                tools:targetApi="o"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:baselineAligned="false">
+
+                <EditText
+                    android:id="@+id/etOptAUR"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/option_a"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginEnd="4dp"
+                    android:textDirection="rtl"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+
+                <EditText
+                    android:id="@+id/etOptBUR"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/option_b"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginStart="4dp"
+                    android:textDirection="rtl"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:baselineAligned="false">
+
+                <EditText
+                    android:id="@+id/etOptCUR"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/option_c"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginEnd="4dp"
+                    android:textDirection="rtl"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+
+                <EditText
+                    android:id="@+id/etOptDUR"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/option_d"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginStart="4dp"
+                    android:textDirection="rtl"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/etExplanationUR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:hint="@string/hint_explanation_ur"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:textDirection="rtl"
+                android:importantForAutofill="no"
+                tools:targetApi="o"/>
+
+            <!-- ═══ ROMAN URDU SECTION ═══ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_roman"
+                android:textColor="@color/accent_gold"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etQuestionRoman"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:hint="@string/hint_question_roman"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:padding="14dp"
+                android:minLines="2"
+                android:inputType="textMultiLine|textCapSentences"
+                android:importantForAutofill="no"
+                tools:targetApi="o"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:baselineAligned="false">
+
+                <EditText
+                    android:id="@+id/etOptARoman"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/option_a"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginEnd="4dp"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+
+                <EditText
+                    android:id="@+id/etOptBRoman"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/option_b"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginStart="4dp"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:baselineAligned="false">
+
+                <EditText
+                    android:id="@+id/etOptCRoman"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/option_c"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginEnd="4dp"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+
+                <EditText
+                    android:id="@+id/etOptDRoman"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input"
+                    android:hint="@string/option_d"
+                    android:textColorHint="@color/text_muted"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:padding="12dp"
+                    android:layout_marginStart="4dp"
+                    android:inputType="text"
+                    android:importantForAutofill="no"
+                    tools:targetApi="o"/>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/etExplanationRoman"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:hint="@string/hint_explanation_roman"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2"
+                android:importantForAutofill="no"
+                tools:targetApi="o"/>
+
+            <!-- ═══ ARABIC SECTION ═══ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_arabic"
+                android:textColor="@color/accent_gold"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etQuestionAR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:hint="@string/hint_question_ar"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:padding="14dp"
+                android:minLines="2"
+                android:inputType="textMultiLine"
+                android:textDirection="rtl"
+                android:importantForAutofill="no"/>
+
+            <EditText
+                android:id="@+id/etExplanationAR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:hint="@string/hint_explanation_ar"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:textDirection="rtl"
+                android:importantForAutofill="no"/>
+
+            <!-- ═══ TURKISH SECTION ═══ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_turkish"
+                android:textColor="@color/accent_gold"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etQuestionTR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:hint="@string/hint_question_tr"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:padding="14dp"
+                android:minLines="2"
+                android:inputType="textMultiLine|textCapSentences"
+                android:importantForAutofill="no"/>
+
+            <EditText
+                android:id="@+id/etExplanationTR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:hint="@string/hint_explanation_tr"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2"
+                android:importantForAutofill="no"/>
+
+            <!-- ═══ CORRECT ANSWER ═══ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_correct_answer"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/correctA"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/option_a"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/accent_gold"
+                    android:background="@drawable/bg_input"
+                    android:layout_marginEnd="6dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <TextView
+                    android:id="@+id/correctB"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/option_b"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_muted"
+                    android:background="@drawable/bg_input"
+                    android:layout_marginHorizontal="6dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <TextView
+                    android:id="@+id/correctC"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/option_c"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_muted"
+                    android:background="@drawable/bg_input"
+                    android:layout_marginHorizontal="6dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <TextView
+                    android:id="@+id/correctD"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/option_d"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_muted"
+                    android:background="@drawable/bg_input"
+                    android:layout_marginStart="6dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+
+            <!-- ═══ MEDIA URLS ═══ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MEDIA URLS (OPTIONAL)"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etImageUrl"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_input"
+                android:hint="Image URL (for Image Quiz)"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:paddingHorizontal="14dp"
+                android:inputType="textUri"
+                android:importantForAutofill="no"
+                tools:targetApi="o"/>
+
+            <EditText
+                android:id="@+id/etAudioUrl"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:hint="Audio URL (for Audio Quiz)"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:paddingHorizontal="14dp"
+                android:inputType="textUri"
+                android:importantForAutofill="no"
+                tools:targetApi="o"/>
+
+            <EditText
+                android:id="@+id/etVideoUrl"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:hint="Video URL (for Video Quiz)"
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:paddingHorizontal="14dp"
+                android:inputType="textUri"
+                android:importantForAutofill="no"
+                tools:targetApi="o"/>
+
+            <!-- ═══ SAVE + DELETE ═══ -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/btn_save_question"
+                android:textColor="@color/bg_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/status_success"
+                app:cornerRadius="12dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDelete"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/btn_delete_question"
+                android:textColor="@color/status_error"
+                android:textSize="14sp"
+                app:backgroundTint="@color/bg_surface"
+                app:cornerRadius="12dp"
+                app:strokeColor="@color/status_error"
+                app:strokeWidth="1dp"
+                android:visibility="gone"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="40dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

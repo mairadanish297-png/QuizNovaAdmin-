@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/includeHeader"
+        layout="@layout/include_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chapter Content"
+                android:textColor="@color/text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold"/>
+
+            <!-- Chapter Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHAPTER TITLE"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etChapterTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:background="@drawable/bg_input"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:padding="14dp"
+                android:hint="Enter chapter title"
+                android:inputType="textCapSentences"
+                android:singleLine="true"
+                android:autofillHints="none"/>
+
+            <!-- Order -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHAPTER ORDER"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etChapterOrder"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:background="@drawable/bg_input"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:padding="14dp"
+                android:hint="1"
+                android:inputType="number"
+                android:singleLine="true"
+                android:autofillHints="none"/>
+
+            <!-- Content English -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CONTENT (ENGLISH)"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="English version of the chapter"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnInsertAdEN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Insert Ad"
+                    android:textSize="10sp"
+                    android:textColor="@color/bg_primary"
+                    app:backgroundTint="@color/accent_gold"
+                    app:cornerRadius="8dp"
+                    android:paddingHorizontal="8dp"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"/>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/etChapterContentEN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:background="@drawable/bg_input"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:padding="14dp"
+                android:hint="English content..."
+                android:inputType="textMultiLine|textCapSentences"
+                android:gravity="top"
+                android:lineSpacingMultiplier="1.4"
+                android:fontFamily="serif"
+                android:autofillHints="none"/>
+
+            <!-- Content Urdu -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CONTENT (URDU)"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Urdu version of the chapter"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnInsertAdUR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Insert Ad"
+                    android:textSize="10sp"
+                    android:textColor="@color/bg_primary"
+                    app:backgroundTint="@color/accent_gold"
+                    app:cornerRadius="8dp"
+                    android:paddingHorizontal="8dp"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"/>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/etChapterContentUR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:background="@drawable/bg_input"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:padding="14dp"
+                android:hint="Urdu content..."
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:lineSpacingMultiplier="1.4"
+                android:fontFamily="serif"
+                android:autofillHints="none"/>
+
+            <TextView
+                android:id="@+id/tvCharCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp"
+                android:gravity="end"
+                android:layout_marginTop="4dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Save Bar at Bottom -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/bg_surface">
+
+        <ProgressBar
+            android:id="@+id/progressSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tvSaveStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="SAVE CHAPTER"
+            android:textColor="@color/bg_primary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/accent_gold"
+            app:cornerRadius="14dp"/>
+    </LinearLayout>
+
+</LinearLayout>

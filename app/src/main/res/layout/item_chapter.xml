@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_accent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    android:layout_marginBottom="6dp">
+
+    <!-- Order Number -->
+    <TextView
+        android:id="@+id/tvChapterOrder"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:textColor="@color/accent_gold"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:background="@drawable/bg_input"/>
+
+    <!-- Title + Preview -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="8dp">
+
+        <TextView
+            android:id="@+id/tvChapterTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/tvChapterPreview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_muted"
+            android:textSize="11sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginTop="2dp"/>
+    </LinearLayout>
+
+    <!-- Edit -->
+    <TextView
+        android:id="@+id/btnEditChapter"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:text="Edit"
+        android:textColor="@color/accent_gold"
+        android:textSize="10sp"
+        android:background="@drawable/bg_btn_outline"
+        android:paddingHorizontal="10dp"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <!-- Delete -->
+    <TextView
+        android:id="@+id/btnDeleteChapter"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:text="Del"
+        android:textColor="#FFF44336"
+        android:textSize="10sp"
+        android:paddingHorizontal="8dp"
+        android:layout_marginStart="4dp"
+        android:clickable="true"
+        android:focusable="true"/>
+
+</LinearLayout>

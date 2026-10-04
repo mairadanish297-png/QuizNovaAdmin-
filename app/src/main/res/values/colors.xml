@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Backgrounds -->
+    <color name="bg_primary">#0D1520</color>
+    <color name="bg_surface">#162029</color>
+    <color name="bg_card">#1A2A3A</color>
+
+    <!-- Accent -->
+    <color name="accent_gold">#E8C547</color>
+    <color name="accent_gold_dark">#B8952E</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0BEC5</color>
+    <color name="text_muted">#94A3B8</color>
+
+    <!-- Status -->
+    <color name="status_success">#4CAF50</color>
+    <color name="status_error">#F44336</color>
+    <color name="status_error_light">#FF5252</color>
+    <color name="status_warning">#FF9800</color>
+    <color name="status_info">#2196F3</color>
+
+    <!-- Difficulty -->
+    <color name="diff_easy">#4CAF50</color>
+    <color name="diff_medium">#FF9800</color>
+    <color name="diff_hard">#F44336</color>
+</resources>

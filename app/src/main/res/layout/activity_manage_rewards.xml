@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText,TouchTargetSizeDiff,TooManyViews,TooManyParents,ObsoleteLayoutParam,ContentDescription"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    android:scrollbars="none"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/includeHeader"
+            layout="@layout/include_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:paddingBottom="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reward Configuration"
+                android:textColor="@color/text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold"/>
+
+            <!-- EASY -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EASY DIFFICULTY"
+                android:textColor="#4CAF50"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card_accent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Coins per correct" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etEasyCoins" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Easy coins"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Time (seconds)" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etEasyTime" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Easy time"/>
+                    <TextView android:text="sec" android:textColor="@color/text_muted" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Negative marking" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etEasyNegative" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/status_error" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Easy negative"/>
+                    <TextView android:text="🪙" android:textColor="@color/status_error" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Bonus threshold" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etEasyBonusThreshold" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Easy bonus threshold"/>
+                    <TextView android:text="correct" android:textColor="@color/text_muted" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Bonus coins" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etEasyBonus" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Easy bonus"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Streak bonus" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etEasyStreakBonus" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Easy streak bonus"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Skip count" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etEasySkip" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Easy skip count"/>
+                    <TextView android:text="" android:layout_width="20dp" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="50:50 Lifeline" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchEasy5050" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" app:thumbTint="@color/accent_gold"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- MEDIUM -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MEDIUM DIFFICULTY"
+                android:textColor="#FF9800"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card_accent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Coins per correct" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etMedCoins" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Medium coins"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Time (seconds)" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etMedTime" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Medium time"/>
+                    <TextView android:text="sec" android:textColor="@color/text_muted" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Negative marking" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etMedNegative" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/status_error" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Medium negative"/>
+                    <TextView android:text="🪙" android:textColor="@color/status_error" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Bonus threshold" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etMedBonusThreshold" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Medium bonus threshold"/>
+                    <TextView android:text="correct" android:textColor="@color/text_muted" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Bonus coins" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etMedBonus" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Medium bonus"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Streak bonus" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etMedStreakBonus" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Medium streak bonus"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Skip count" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etMedSkip" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Medium skip count"/>
+                    <TextView android:text="" android:layout_width="20dp" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="50:50 Lifeline" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchMed5050" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" app:thumbTint="@color/accent_gold"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- HARD -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HARD DIFFICULTY"
+                android:textColor="#F44336"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card_accent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Coins per correct" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etHardCoins" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Hard coins"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Time (seconds)" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etHardTime" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Hard time"/>
+                    <TextView android:text="sec" android:textColor="@color/text_muted" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Negative marking" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etHardNegative" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/status_error" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Hard negative"/>
+                    <TextView android:text="🪙" android:textColor="@color/status_error" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Bonus threshold" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etHardBonusThreshold" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Hard bonus threshold"/>
+                    <TextView android:text="correct" android:textColor="@color/text_muted" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Bonus coins" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etHardBonus" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Hard bonus"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Streak bonus" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etHardStreakBonus" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Hard streak bonus"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Skip count" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etHardSkip" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Hard skip count"/>
+                    <TextView android:text="" android:layout_width="20dp" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="50:50 Lifeline" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchHard5050" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" app:thumbTint="@color/accent_gold"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- DAILY -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DAILY LOGIN REWARDS (DAY 1-7)"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card_accent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Day 1" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etDay1" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Day 1 reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Day 2" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etDay2" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Day 2 reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Day 3" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etDay3" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Day 3 reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Day 4" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etDay4" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Day 4 reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Day 5" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etDay5" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Day 5 reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Day 6" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etDay6" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Day 6 reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Day 7" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etDay7" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Day 7 reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- STREAK -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STREAK MILESTONE REWARDS"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card_accent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="3-day streak" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etStreak3" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="3-day streak reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="7-day streak" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etStreak7" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="7-day streak reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="14-day streak" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etStreak14" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="14-day streak reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="30-day streak" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etStreak30" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="30-day streak reward"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- SPIN WHEEL -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SPIN WHEEL CONFIGURATION"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card_accent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Daily free spins" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etDailySpins" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Daily spins count"/>
+                    <TextView android:text="spins" android:textColor="@color/text_muted" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Segments (one per line: coins,weight)"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="6dp"/>
+
+                <EditText
+                    android:id="@+id/etSegments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:minLines="8"
+                    android:maxLines="12"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:padding="12dp"
+                    android:fontFamily="monospace"
+                    android:autofillHints="none"
+                    android:hint="0,25&#10;5,8&#10;10,15&#10;15,20&#10;50,3&#10;20,18&#10;30,10&#10;100,5"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Format: coins,weight per line. Higher weight = more frequent."
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp"
+                    android:layout_marginTop="6dp"/>
+            </LinearLayout>
+
+            <!-- REFERRAL & PREMIUM -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="REFERRAL &amp; PREMIUM REWARDS"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card_accent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Referral reward" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etReferralReward" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Referral coins"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/bg_primary" android:layout_marginVertical="8dp"/>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Premium Price" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etPremiumPrice" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/accent_gold" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Price"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- WITHDRAWAL -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WITHDRAWAL SETTINGS"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card_accent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Coin to Dollar rate" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etCoinRate" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Coin dollar rate"/>
+                    <TextView android:text="coins/$1" android:textColor="@color/text_muted" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Min withdrawal" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etMinWithdrawal" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Min withdrawal amount"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:baselineAligned="false">
+                    <TextView android:text="Max withdrawal" android:textColor="@color/text_primary" android:textSize="14sp" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <EditText android:id="@+id/etMaxWithdrawal" android:layout_width="70dp" android:layout_height="wrap_content" android:minHeight="48dp" android:background="@drawable/bg_input" android:textColor="@color/text_primary" android:textSize="14sp" android:gravity="center" android:inputType="number" android:singleLine="true" android:paddingHorizontal="6dp" android:autofillHints="none" android:hint="Max withdrawal amount"/>
+                    <TextView android:text="🪙" android:textColor="@color/accent_gold" android:textSize="14sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- SAVE -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:text="SAVE ALL SETTINGS"
+                android:textColor="@color/bg_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/accent_gold"
+                app:cornerRadius="14dp"/>
+
+            <TextView
+                android:id="@+id/tvSaveStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/status_success"
+                android:textSize="13sp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
