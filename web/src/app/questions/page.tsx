@@ -269,37 +269,57 @@ export default function QuestionsPage() {
     setUploading(true);
 
     try {
+      const text = await bulkFile.text();
+
       if (bulkFile.name.endsWith(".json")) {
-        const text = await bulkFile.text();
-        const jsonArray = JSON.parse(text);
+        const parsed = JSON.parse(text);
+        const jsonArray = Array.isArray(parsed) ? parsed : [parsed];
         const batch = writeBatch(db);
 
         jsonArray.forEach((q: any) => {
-          const docRef = doc(collection(db, "questions", bulkCategory, "items"));
-          const enQ = asText(q.questionText || q.question || q.en?.question);
-          const opts = parseOptions(q.options || q.en?.options, [q.optionA, q.optionB, q.optionC, q.optionD]);
+          const cat = asText(q.category, bulkCategory) || bulkCategory;
+          const docRef = doc(collection(db, "questions", cat, "items"));
+          const enObj = asRecord(q.en);
+          const enQ = asText(enObj.question || q.questionText || q.question);
+          const opts = parseOptions(enObj.options || q.options, [q.optionA, q.optionB, q.optionC, q.optionD]);
           const corr = Number(q.correct ?? q.correctOptionIndex ?? 0);
+          const diff = asText(q.difficulty, "easy");
+          const qType = asText(q.type, "text");
+          const imgUrl = asText(q.imageUrl || q.mediaUrl);
 
           batch.set(docRef, {
-            category: bulkCategory,
-            difficulty: asText(q.difficulty, "easy"),
-            type: asText(q.type, "text"),
-            mediaUrl: asText(q.mediaUrl),
+            category: cat,
+            difficulty: diff,
+            type: qType,
+            mediaUrl: imgUrl,
             correct: corr,
             isActive: true,
-            en: { question: enQ, options: opts, explanation: asText(q.explanation) },
-            ur: { question: "", options: ["", "", "", ""], explanation: "" },
-            roman: { question: "", options: ["", "", "", ""], explanation: "" },
+            en: {
+              question: enQ,
+              options: opts,
+              explanation: asText(enObj.explanation || q.explanation),
+            },
+            ur: {
+              question: asText(q.ur?.question),
+              options: parseOptions(q.ur?.options, ["", "", "", ""]),
+              explanation: asText(q.ur?.explanation),
+            },
+            roman: {
+              question: asText(q.roman?.question),
+              options: parseOptions(q.roman?.options, ["", "", "", ""]),
+              explanation: asText(q.roman?.explanation),
+            },
             questionText: enQ,
             options: opts,
             correctOptionIndex: corr,
-            explanation: asText(q.explanation),
+            explanation: asText(enObj.explanation || q.explanation),
+            imageUrl: imgUrl,
           });
         });
 
         await batch.commit();
+        alert(`Successfully imported ${jsonArray.length} questions into category "${bulkCategory}"!`);
       } else if (bulkFile.name.endsWith(".csv")) {
-        const text = await bulkFile.text();
         const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
         if (lines.length > 1) {
           const headers = lines[0].split(",").map(h => h.trim().replace(/^"(.*)"$/, "$1"));
@@ -314,7 +334,8 @@ export default function QuestionsPage() {
 
             const enQ = rowObj["questionText"] || rowObj["question"] || "";
             if (enQ) {
-              const docRef = doc(collection(db, "questions", bulkCategory, "items"));
+              const cat = rowObj["category"] || bulkCategory;
+              const docRef = doc(collection(db, "questions", cat, "items"));
               const opts = [
                 rowObj["optionA"] || rowObj["opt1"] || "",
                 rowObj["optionB"] || rowObj["opt2"] || "",
@@ -324,10 +345,10 @@ export default function QuestionsPage() {
               const corr = parseInt(rowObj["correct"] || rowObj["correctOptionIndex"] || "0", 10);
 
               batch.set(docRef, {
-                category: bulkCategory,
+                category: cat,
                 difficulty: rowObj["difficulty"] || "easy",
                 type: rowObj["type"] || "text",
-                mediaUrl: rowObj["mediaUrl"] || "",
+                mediaUrl: rowObj["mediaUrl"] || rowObj["imageUrl"] || "",
                 correct: isNaN(corr) ? 0 : corr,
                 isActive: true,
                 en: { question: enQ, options: opts, explanation: rowObj["explanation"] || "" },
@@ -341,6 +362,7 @@ export default function QuestionsPage() {
             }
           }
           await batch.commit();
+          alert(`CSV imported successfully into category "${bulkCategory}"!`);
         }
       }
       setShowBulkModal(false);
@@ -742,7 +764,7 @@ export default function QuestionsPage() {
         </div>
       )}
 
-      {/* Bulk Upload Modal */}
+      {/* Bulk Upload JSON file format helper message */}
       {showBulkModal && (
         <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
@@ -768,6 +790,9 @@ export default function QuestionsPage() {
                 onChange={(e) => setBulkFile(e.target.files?.[0] || null)}
                 className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700"
               />
+              <p className="text-[11px] text-slate-400 mt-2">
+                Supported JSON format: Array of objects with &quot;en&quot; (question, options, explanation), &quot;correct&quot;, &quot;difficulty&quot;, etc.
+              </p>
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2">
