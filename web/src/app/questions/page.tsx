@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, getDocs, doc, setDoc, deleteDoc, writeBatch, collectionGroup } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, deleteDoc, writeBatch } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Search, Plus, Upload, Trash2, Edit, HelpCircle, CheckCircle2, FileText, RefreshCw, AlertTriangle } from "lucide-react";
 import Papa from "papaparse";
@@ -83,7 +83,7 @@ export default function QuestionsPage() {
 
       const allList: QuestionData[] = [];
 
-      await Promise.all(catNames.map(async (catName) => {
+      for (const catName of catNames) {
         try {
           const qSnap = await getDocs(collection(db, "questions", catName, "items"));
           qSnap.docs.forEach((docSnap) => {
@@ -127,38 +127,11 @@ export default function QuestionsPage() {
         } catch (e) {
           console.error(`Error loading questions for ${catName}:`, e);
         }
-      }));
-
-      if (allList.length === 0) {
-        try {
-          const groupSnap = await getDocs(collectionGroup(db, "items"));
-          groupSnap.docs.forEach(docSnap => {
-            const data = docSnap.data() || {};
-            allList.push({
-              id: docSnap.id,
-              category: data.category || "General",
-              difficulty: data.difficulty || "easy",
-              type: data.type || "text",
-              mediaUrl: data.mediaUrl || "",
-              correct: data.correct ?? data.correctOptionIndex ?? 0,
-              isActive: true,
-              en: {
-                question: data.en?.question || data.questionText || data.question || "",
-                options: data.en?.options || data.options || ["", "", "", ""],
-                explanation: data.en?.explanation || data.explanation || "",
-              },
-              ur: { question: "", options: ["", "", "", ""], explanation: "" },
-              roman: { question: "", options: ["", "", "", ""], explanation: "" },
-            });
-          });
-        } catch (e) {
-          console.error("CollectionGroup fallback failed:", e);
-        }
       }
 
       setQuestions(allList);
     } catch (err) {
-      console.error(err);
+      console.error("Error in loadCategoriesAndQuestions:", err);
     } finally {
       setLoading(false);
     }
