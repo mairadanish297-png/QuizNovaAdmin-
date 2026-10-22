@@ -74,7 +74,7 @@ export default function QuestionsPage() {
     setLoading(true);
     try {
       const catSnap = await getDocs(collection(db, "categories"));
-      const catNames = catSnap.docs.map(d => d.data().name || d.id);
+      const catNames = catSnap.docs.map(d => d.data()?.name || d.id).filter(Boolean) as string[];
       setCategories(catNames);
       if (catNames.length > 0) {
         setCategory(catNames[0]);
@@ -84,6 +84,7 @@ export default function QuestionsPage() {
       const allList: QuestionData[] = [];
 
       for (const catName of catNames) {
+        if (!catName) continue;
         try {
           const qSnap = await getDocs(collection(db, "questions", catName, "items"));
           qSnap.docs.forEach((docSnap) => {
@@ -105,7 +106,7 @@ export default function QuestionsPage() {
               difficulty: data.difficulty || "easy",
               type: data.type || "text",
               mediaUrl: data.mediaUrl || data.imageUrl || data.audioUrl || data.videoUrl || "",
-              correct: data.correct ?? data.correctOptionIndex ?? 0,
+              correct: Number(data.correct ?? data.correctOptionIndex ?? 0),
               isActive: data.isActive ?? true,
               en: {
                 question: enObj.question || data.questionText || data.question || "",
@@ -325,7 +326,8 @@ export default function QuestionsPage() {
     }
   };
 
-  const filteredQuestions = questions.filter(q => {
+  const filteredQuestions = (questions || []).filter(q => {
+    if (!q) return false;
     const matchesCat = filterCategory === "All" || q.category === filterCategory;
     const matchesDiff = filterDifficulty === "All" || q.difficulty === filterDifficulty;
     const matchesType = filterType === "All" || q.type === filterType;
@@ -389,7 +391,7 @@ export default function QuestionsPage() {
           className="border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
         >
           <option value="All">All Categories</option>
-          {categories.map((c) => (
+          {(categories || []).map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
@@ -426,7 +428,7 @@ export default function QuestionsPage() {
       ) : (
         <div className="space-y-4">
           {filteredQuestions.map((q, idx) => (
-            <div key={q.id} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+            <div key={q.id || idx} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <span className="bg-indigo-50 text-indigo-700 font-bold text-xs px-2.5 py-1 rounded-lg border border-indigo-100">
@@ -527,7 +529,7 @@ export default function QuestionsPage() {
                     onChange={(e) => setCategory(e.target.value)}
                     className="w-full border rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 bg-white"
                   >
-                    {categories.map((c) => (
+                    {(categories || []).map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
@@ -726,7 +728,7 @@ export default function QuestionsPage() {
                 onChange={(e) => setBulkCategory(e.target.value)}
                 className="w-full border rounded-xl px-4 py-2.5 text-sm bg-white"
               >
-                {categories.map((c) => (
+                {(categories || []).map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
