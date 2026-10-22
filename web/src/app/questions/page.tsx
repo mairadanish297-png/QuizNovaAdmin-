@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, doc, setDoc, deleteDoc, writeBatch } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Search, Plus, Upload, Trash2, Edit, HelpCircle, CheckCircle2, FileText, RefreshCw, AlertTriangle } from "lucide-react";
-import Papa from "papaparse";
 
 interface QuestionLang {
   question: string;
@@ -24,6 +23,21 @@ interface QuestionData {
   ur: QuestionLang;
   roman: QuestionLang;
 }
+
+const asRecord = (value: unknown): Record<string, unknown> =>
+  value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+
+const asText = (value: unknown, fallback = ""): string =>
+  typeof value === "string" ? value : fallback;
+
+const parseOptions = (value: unknown, fallback: unknown[]): string[] => {
+  if (Array.isArray(value) && value.length >= 4) {
+    return value.map(option => asText(option));
+  }
+  return fallback.map(option => asText(option));
+};
 
 export default function QuestionsPage() {
   const [categories, setCategories] = useState<string[]>([]);
@@ -74,7 +88,9 @@ export default function QuestionsPage() {
     setLoading(true);
     try {
       const catSnap = await getDocs(collection(db, "categories"));
-      const catNames = catSnap.docs.map(d => d.data()?.name || d.id).filter(Boolean) as string[];
+      const catNames = catSnap.docs
+        .map(d => asText(d.data()?.name, d.id))
+        .filter(Boolean);
       setCategories(catNames);
       if (catNames.length > 0) {
         setCategory(catNames[0]);
@@ -88,40 +104,40 @@ export default function QuestionsPage() {
         try {
           const qSnap = await getDocs(collection(db, "questions", catName, "items"));
           qSnap.docs.forEach((docSnap) => {
-            const data = docSnap.data() || {};
-            const enObj = data.en || {};
-            const urObj = data.ur || {};
-            const romanObj = data.roman || {};
-
-            const parseOptions = (arr: any) => Array.isArray(arr) && arr.length >= 4 ? arr : [
+            const data = asRecord(docSnap.data());
+            const enObj = asRecord(data.en);
+            const urObj = asRecord(data.ur);
+            const romanObj = asRecord(data.roman);
+            const legacyOptions = [
               data.optionA || data.opt1 || "",
               data.optionB || data.opt2 || "",
               data.optionC || data.opt3 || "",
               data.optionD || data.opt4 || "",
             ];
+            const correctValue = Number(data.correct ?? data.correctOptionIndex ?? 0);
 
             allList.push({
               id: docSnap.id,
-              category: data.category || catName,
-              difficulty: data.difficulty || "easy",
-              type: data.type || "text",
-              mediaUrl: data.mediaUrl || data.imageUrl || data.audioUrl || data.videoUrl || "",
-              correct: Number(data.correct ?? data.correctOptionIndex ?? 0),
-              isActive: data.isActive ?? true,
+              category: asText(data.category, catName) || catName,
+              difficulty: asText(data.difficulty, "easy"),
+              type: asText(data.type, "text"),
+              mediaUrl: asText(data.mediaUrl || data.imageUrl || data.audioUrl || data.videoUrl),
+              correct: Number.isInteger(correctValue) && correctValue >= 0 ? correctValue : 0,
+              isActive: typeof data.isActive === "boolean" ? data.isActive : true,
               en: {
-                question: enObj.question || data.questionText || data.question || "",
-                options: parseOptions(enObj.options || data.options),
-                explanation: enObj.explanation || data.explanation || "",
+                question: asText(enObj.question) || asText(data.questionText) || asText(data.question),
+                options: parseOptions(enObj.options || data.options, legacyOptions),
+                explanation: asText(enObj.explanation) || asText(data.explanation),
               },
               ur: {
-                question: urObj.question || "",
-                options: Array.isArray(urObj.options) && urObj.options.length >= 4 ? urObj.options : ["", "", "", ""],
-                explanation: urObj.explanation || "",
+                question: asText(urObj.question),
+                options: parseOptions(urObj.options, ["", "", "", ""]),
+                explanation: asText(urObj.explanation),
               },
               roman: {
-                question: romanObj.question || "",
-                options: Array.isArray(romanObj.options) && romanObj.options.length >= 4 ? romanObj.options : ["", "", "", ""],
-                explanation: romanObj.explanation || "",
+                question: asText(romanObj.question),
+                options: parseOptions(romanObj.options, ["", "", "", ""]),
+                explanation: asText(romanObj.explanation),
               },
             });
           });
@@ -260,62 +276,72 @@ export default function QuestionsPage() {
 
         jsonArray.forEach((q: any) => {
           const docRef = doc(collection(db, "questions", bulkCategory, "items"));
-          const enQ = q.questionText || q.question || q.en?.question || "";
-          const opts = q.options || q.en?.options || [q.optionA, q.optionB, q.optionC, q.optionD] || ["", "", "", ""];
-          const corr = q.correct ?? q.correctOptionIndex ?? 0;
+          const enQ = asText(q.questionText || q.question || q.en?.question);
+          const opts = parseOptions(q.options || q.en?.options, [q.optionA, q.optionB, q.optionC, q.optionD]);
+          const corr = Number(q.correct ?? q.correctOptionIndex ?? 0);
 
           batch.set(docRef, {
             category: bulkCategory,
-            difficulty: q.difficulty || "easy",
-            type: q.type || "text",
-            mediaUrl: q.mediaUrl || "",
-            correct: Number(corr),
+            difficulty: asText(q.difficulty, "easy"),
+            type: asText(q.type, "text"),
+            mediaUrl: asText(q.mediaUrl),
+            correct: corr,
             isActive: true,
-            en: { question: enQ, options: opts, explanation: q.explanation || "" },
-            ur: { question: q.ur?.question || "", options: ["", "", "", ""], explanation: "" },
-            roman: { question: q.roman?.question || "", options: ["", "", "", ""], explanation: "" },
+            en: { question: enQ, options: opts, explanation: asText(q.explanation) },
+            ur: { question: "", options: ["", "", "", ""], explanation: "" },
+            roman: { question: "", options: ["", "", "", ""], explanation: "" },
             questionText: enQ,
             options: opts,
-            correctOptionIndex: Number(corr),
-            explanation: q.explanation || "",
+            correctOptionIndex: corr,
+            explanation: asText(q.explanation),
           });
         });
 
         await batch.commit();
       } else if (bulkFile.name.endsWith(".csv")) {
-        Papa.parse(bulkFile, {
-          header: true,
-          complete: async (results) => {
-            const batch = writeBatch(db);
-            results.data.forEach((row: any) => {
-              if (row.question || row.questionText) {
-                const docRef = doc(collection(db, "questions", bulkCategory, "items"));
-                const enQ = row.questionText || row.question;
-                const opts = [row.optionA || row.opt1 || "", row.optionB || row.opt2 || "", row.optionC || row.opt3 || "", row.optionD || row.opt4 || ""];
-                const corr = parseInt(row.correct || row.correctOptionIndex || "0", 10);
+        const text = await bulkFile.text();
+        const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
+        if (lines.length > 1) {
+          const headers = lines[0].split(",").map(h => h.trim().replace(/^"(.*)"$/, "$1"));
+          const batch = writeBatch(db);
 
-                batch.set(docRef, {
-                  category: bulkCategory,
-                  difficulty: row.difficulty || "easy",
-                  type: row.type || "text",
-                  mediaUrl: row.mediaUrl || "",
-                  correct: corr,
-                  isActive: true,
-                  en: { question: enQ, options: opts, explanation: row.explanation || "" },
-                  ur: { question: "", options: ["", "", "", ""], explanation: "" },
-                  roman: { question: "", options: ["", "", "", ""], explanation: "" },
-                  questionText: enQ,
-                  options: opts,
-                  correctOptionIndex: corr,
-                  explanation: row.explanation || "",
-                });
-              }
+          for (let i = 1; i < lines.length; i++) {
+            const rowValues = lines[i].split(",").map(v => v.trim().replace(/^"(.*)"$/, "$1"));
+            const rowObj: Record<string, string> = {};
+            headers.forEach((h, idx) => {
+              rowObj[h] = rowValues[idx] || "";
             });
-            await batch.commit();
-            setShowBulkModal(false);
-            loadCategoriesAndQuestions();
+
+            const enQ = rowObj["questionText"] || rowObj["question"] || "";
+            if (enQ) {
+              const docRef = doc(collection(db, "questions", bulkCategory, "items"));
+              const opts = [
+                rowObj["optionA"] || rowObj["opt1"] || "",
+                rowObj["optionB"] || rowObj["opt2"] || "",
+                rowObj["optionC"] || rowObj["opt3"] || "",
+                rowObj["optionD"] || rowObj["opt4"] || "",
+              ];
+              const corr = parseInt(rowObj["correct"] || rowObj["correctOptionIndex"] || "0", 10);
+
+              batch.set(docRef, {
+                category: bulkCategory,
+                difficulty: rowObj["difficulty"] || "easy",
+                type: rowObj["type"] || "text",
+                mediaUrl: rowObj["mediaUrl"] || "",
+                correct: isNaN(corr) ? 0 : corr,
+                isActive: true,
+                en: { question: enQ, options: opts, explanation: rowObj["explanation"] || "" },
+                ur: { question: "", options: ["", "", "", ""], explanation: "" },
+                roman: { question: "", options: ["", "", "", ""], explanation: "" },
+                questionText: enQ,
+                options: opts,
+                correctOptionIndex: isNaN(corr) ? 0 : corr,
+                explanation: rowObj["explanation"] || "",
+              });
+            }
           }
-        });
+          await batch.commit();
+        }
       }
       setShowBulkModal(false);
       loadCategoriesAndQuestions();
