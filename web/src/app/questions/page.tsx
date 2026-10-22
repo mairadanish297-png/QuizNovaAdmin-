@@ -93,8 +93,8 @@ export default function QuestionsPage() {
         .filter(Boolean);
       setCategories(catNames);
       if (catNames.length > 0) {
-        setCategory(catNames[0]);
-        setBulkCategory(catNames[0]);
+        if (!category) setCategory(catNames[0]);
+        if (!bulkCategory) setBulkCategory(catNames[0]);
       }
 
       const allList: QuestionData[] = [];
@@ -265,7 +265,11 @@ export default function QuestionsPage() {
   };
 
   const handleBulkUpload = async () => {
-    if (!bulkFile || !bulkCategory) return;
+    if (!bulkFile) {
+      alert("Please select a JSON or CSV file first.");
+      return;
+    }
+    const targetCat = bulkCategory || categories[0] || "General";
     setUploading(true);
 
     try {
@@ -277,7 +281,7 @@ export default function QuestionsPage() {
         const batch = writeBatch(db);
 
         jsonArray.forEach((q: any) => {
-          const cat = asText(q.category, bulkCategory) || bulkCategory;
+          const cat = asText(q.category, targetCat) || targetCat;
           const docRef = doc(collection(db, "questions", cat, "items"));
           const enObj = asRecord(q.en);
           const enQ = asText(enObj.question || q.questionText || q.question);
@@ -318,7 +322,7 @@ export default function QuestionsPage() {
         });
 
         await batch.commit();
-        alert(`Successfully imported ${jsonArray.length} questions into category "${bulkCategory}"!`);
+        alert(`Successfully imported ${jsonArray.length} questions into category "${targetCat}"!`);
       } else if (bulkFile.name.endsWith(".csv")) {
         const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
         if (lines.length > 1) {
@@ -334,7 +338,7 @@ export default function QuestionsPage() {
 
             const enQ = rowObj["questionText"] || rowObj["question"] || "";
             if (enQ) {
-              const cat = rowObj["category"] || bulkCategory;
+              const cat = rowObj["category"] || targetCat;
               const docRef = doc(collection(db, "questions", cat, "items"));
               const opts = [
                 rowObj["optionA"] || rowObj["opt1"] || "",
@@ -362,10 +366,11 @@ export default function QuestionsPage() {
             }
           }
           await batch.commit();
-          alert(`CSV imported successfully into category "${bulkCategory}"!`);
+          alert(`CSV imported successfully into category "${targetCat}"!`);
         }
       }
       setShowBulkModal(false);
+      setBulkFile(null);
       loadCategoriesAndQuestions();
     } catch (err: any) {
       alert("Error during bulk upload: " + err.message);
@@ -404,7 +409,10 @@ export default function QuestionsPage() {
             </button>
           )}
           <button
-            onClick={() => setShowBulkModal(true)}
+            onClick={() => {
+              if (categories.length > 0 && !bulkCategory) setBulkCategory(categories[0]);
+              setShowBulkModal(true);
+            }}
             className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2.5 rounded-xl shadow-md transition-all flex items-center gap-2 text-sm"
           >
             <Upload className="w-4 h-4" />
@@ -764,7 +772,7 @@ export default function QuestionsPage() {
         </div>
       )}
 
-      {/* Bulk Upload JSON file format helper message */}
+      {/* Bulk Upload Modal */}
       {showBulkModal && (
         <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
@@ -795,7 +803,7 @@ export default function QuestionsPage() {
               </p>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-2">
+            <div className="flex items-center justify-end pt-2 gap-3">
               <button
                 type="button"
                 onClick={() => setShowBulkModal(false)}
