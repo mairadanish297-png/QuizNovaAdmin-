@@ -15,10 +15,10 @@ interface QuestionLang {
 interface QuestionData {
   id: string;
   category: string;
-  difficulty: string; // easy, medium, hard
-  type: string; // text, image, audio, video
+  difficulty: string;
+  type: string;
   mediaUrl?: string;
-  correct: number; // 0, 1, 2, 3
+  correct: number;
   isActive: boolean;
   en: QuestionLang;
   ur: QuestionLang;
@@ -83,12 +83,11 @@ export default function QuestionsPage() {
 
       const allList: QuestionData[] = [];
 
-      // Query questions/{cat}/items for each category
       await Promise.all(catNames.map(async (catName) => {
         try {
           const qSnap = await getDocs(collection(db, "questions", catName, "items"));
           qSnap.docs.forEach((docSnap) => {
-            const data = docSnap.data();
+            const data = docSnap.data() || {};
             const enObj = data.en || {};
             const urObj = data.ur || {};
             const romanObj = data.roman || {};
@@ -115,12 +114,12 @@ export default function QuestionsPage() {
               },
               ur: {
                 question: urObj.question || "",
-                options: Array.isArray(urObj.options) ? urObj.options : ["", "", "", ""],
+                options: Array.isArray(urObj.options) && urObj.options.length >= 4 ? urObj.options : ["", "", "", ""],
                 explanation: urObj.explanation || "",
               },
               roman: {
                 question: romanObj.question || "",
-                options: Array.isArray(romanObj.options) ? romanObj.options : ["", "", "", ""],
+                options: Array.isArray(romanObj.options) && romanObj.options.length >= 4 ? romanObj.options : ["", "", "", ""],
                 explanation: romanObj.explanation || "",
               },
             });
@@ -130,19 +129,18 @@ export default function QuestionsPage() {
         }
       }));
 
-      // Fallback query via collectionGroup if empty
       if (allList.length === 0) {
         try {
           const groupSnap = await getDocs(collectionGroup(db, "items"));
           groupSnap.docs.forEach(docSnap => {
-            const data = docSnap.data();
+            const data = docSnap.data() || {};
             allList.push({
               id: docSnap.id,
               category: data.category || "General",
               difficulty: data.difficulty || "easy",
               type: data.type || "text",
               mediaUrl: data.mediaUrl || "",
-              correct: data.correct ?? 0,
+              correct: data.correct ?? data.correctOptionIndex ?? 0,
               isActive: true,
               en: {
                 question: data.en?.question || data.questionText || data.question || "",
@@ -186,23 +184,23 @@ export default function QuestionsPage() {
 
   const handleOpenEdit = (q: QuestionData) => {
     setEditingId(q.id);
-    setCategory(q.category);
-    setDifficulty(q.difficulty);
-    setType(q.type);
+    setCategory(q.category || categories[0] || "General");
+    setDifficulty(q.difficulty || "easy");
+    setType(q.type || "text");
     setMediaUrl(q.mediaUrl || "");
-    setCorrect(q.correct);
+    setCorrect(q.correct ?? 0);
 
-    setEnQuestion(q.en.question);
-    setEnOptions([...q.en.options]);
-    setEnExplanation(q.en.explanation);
+    setEnQuestion(q.en?.question || "");
+    setEnOptions(Array.isArray(q.en?.options) ? [...q.en.options] : ["", "", "", ""]);
+    setEnExplanation(q.en?.explanation || "");
 
-    setUrQuestion(q.ur.question);
-    setUrOptions([...q.ur.options]);
-    setUrExplanation(q.ur.explanation);
+    setUrQuestion(q.ur?.question || "");
+    setUrOptions(Array.isArray(q.ur?.options) ? [...q.ur.options] : ["", "", "", ""]);
+    setUrExplanation(q.ur?.explanation || "");
 
-    setRomanQuestion(q.roman.question);
-    setRomanOptions([...q.roman.options]);
-    setRomanExplanation(q.roman.explanation);
+    setRomanQuestion(q.roman?.question || "");
+    setRomanOptions(Array.isArray(q.roman?.options) ? [...q.roman.options] : ["", "", "", ""]);
+    setRomanExplanation(q.roman?.explanation || "");
 
     setShowAddModal(true);
   };
@@ -214,50 +212,45 @@ export default function QuestionsPage() {
       return;
     }
 
-    const docId = editingId || doc(collection(db, "questions", category, "items")).id;
-
-    const data = {
-      category,
-      difficulty,
-      type,
-      mediaUrl,
-      correct: Number(correct),
-      isActive: true,
-      en: {
-        question: enQuestion,
-        options: enOptions,
-        explanation: enExplanation,
-      },
-      ur: {
-        question: urQuestion,
-        options: urOptions,
-        explanation: urExplanation,
-      },
-      roman: {
-        question: romanQuestion,
-        options: romanOptions,
-        explanation: romanExplanation,
-      },
-      questionText: enQuestion,
-      options: enOptions,
-      correctOptionIndex: Number(correct),
-      explanation: enExplanation,
-      updatedAt: new Date().toISOString(),
-    };
-
     try {
-      await setDoc(doc(db, "questions", category, "items", docId), data, { merge: true });
+      const docRef = editingId
+        ? doc(db, "questions", category, "items", editingId)
+        : doc(collection(db, "questions", category, "items"));
+
+      const data = {
+        category,
+        difficulty,
+        type,
+        mediaUrl,
+        correct: Number(correct),
+        isActive: true,
+        en: { question: enQuestion, options: enOptions, explanation: enExplanation },
+        ur: { question: urQuestion, options: urOptions, explanation: urExplanation },
+        roman: { question: romanQuestion, options: romanOptions, explanation: romanExplanation },
+        questionText: enQuestion,
+        options: enOptions,
+        correctOptionIndex: Number(correct),
+        explanation: enExplanation,
+        updatedAt: new Date().toISOString(),
+      };
+
+      await setDoc(docRef, data, { merge: true });
       setShowAddModal(false);
       loadCategoriesAndQuestions();
-    } catch (err) {
-      console.error("Error saving question:", err);
+    } catch (err: any) {
+      alert("Error saving question: " + err.message);
     }
   };
 
   const handleDeleteSingle = async (q: QuestionData) => {
-    if (confirm(`Delete question: "${q.en.question.slice(0, 60)}..."?`)) {
-      await deleteDoc(doc(db, "questions", q.category, "items", q.id));
-      loadCategoriesAndQuestions();
+    const qText = q.en?.question || q.ur?.question || "Question";
+    if (confirm(`Delete question: "${qText.slice(0, 60)}..."?`)) {
+      try {
+        await deleteDoc(doc(db, "questions", q.category, "items", q.id));
+        loadCategoriesAndQuestions();
+      } catch (err: any) {
+        alert("Delete failed: " + err.message);
+      }
     }
   };
 
@@ -274,8 +267,8 @@ export default function QuestionsPage() {
         await batch.commit();
         alert(`Deleted ${filteredQuestions.length} questions successfully.`);
         loadCategoriesAndQuestions();
-      } catch (err) {
-        alert("Error deleting questions: " + err);
+      } catch (err: any) {
+        alert("Error deleting questions: " + err.message);
         setLoading(false);
       }
     }
@@ -294,7 +287,7 @@ export default function QuestionsPage() {
         jsonArray.forEach((q: any) => {
           const docRef = doc(collection(db, "questions", bulkCategory, "items"));
           const enQ = q.questionText || q.question || q.en?.question || "";
-          const opts = q.options || q.en?.options || [q.optionA, q.optionB, q.optionC, q.optionD];
+          const opts = q.options || q.en?.options || [q.optionA, q.optionB, q.optionC, q.optionD] || ["", "", "", ""];
           const corr = q.correct ?? q.correctOptionIndex ?? 0;
 
           batch.set(docRef, {
@@ -305,8 +298,8 @@ export default function QuestionsPage() {
             correct: Number(corr),
             isActive: true,
             en: { question: enQ, options: opts, explanation: q.explanation || "" },
-            ur: { question: q.ur?.question || "", options: q.ur?.options || ["", "", "", ""], explanation: "" },
-            roman: { question: q.roman?.question || "", options: q.roman?.options || ["", "", "", ""], explanation: "" },
+            ur: { question: q.ur?.question || "", options: ["", "", "", ""], explanation: "" },
+            roman: { question: q.roman?.question || "", options: ["", "", "", ""], explanation: "" },
             questionText: enQ,
             options: opts,
             correctOptionIndex: Number(corr),
@@ -324,7 +317,7 @@ export default function QuestionsPage() {
               if (row.question || row.questionText) {
                 const docRef = doc(collection(db, "questions", bulkCategory, "items"));
                 const enQ = row.questionText || row.question;
-                const opts = [row.optionA || row.opt1, row.optionB || row.opt2, row.optionC || row.opt3, row.optionD || row.opt4];
+                const opts = [row.optionA || row.opt1 || "", row.optionB || row.opt2 || "", row.optionC || row.opt3 || "", row.optionD || row.opt4 || ""];
                 const corr = parseInt(row.correct || row.correctOptionIndex || "0", 10);
 
                 batch.set(docRef, {
@@ -352,8 +345,8 @@ export default function QuestionsPage() {
       }
       setShowBulkModal(false);
       loadCategoriesAndQuestions();
-    } catch (err) {
-      alert("Error: " + err);
+    } catch (err: any) {
+      alert("Error during bulk upload: " + err.message);
     } finally {
       setUploading(false);
     }
@@ -363,8 +356,8 @@ export default function QuestionsPage() {
     const matchesCat = filterCategory === "All" || q.category === filterCategory;
     const matchesDiff = filterDifficulty === "All" || q.difficulty === filterDifficulty;
     const matchesType = filterType === "All" || q.type === filterType;
-    const matchesSearch = q.en.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          q.ur.question.toLowerCase().includes(searchTerm.toLowerCase());
+    const qText = (q.en?.question || q.ur?.question || "").toLowerCase();
+    const matchesSearch = qText.includes(searchTerm.toLowerCase());
     return matchesCat && matchesDiff && matchesType && matchesSearch;
   });
 
@@ -497,7 +490,7 @@ export default function QuestionsPage() {
               </div>
 
               <h3 className="font-bold text-slate-900 text-base">
-                {q.en.question || q.ur.question || "No question text"}
+                {q.en?.question || q.ur?.question || "No question text"}
               </h3>
 
               {q.mediaUrl && (
@@ -509,7 +502,7 @@ export default function QuestionsPage() {
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                {q.en.options.map((opt, optIdx) => {
+                {(q.en?.options || ["", "", "", ""]).map((opt, optIdx) => {
                   const isCorrect = optIdx === q.correct;
                   return (
                     <div
@@ -527,7 +520,7 @@ export default function QuestionsPage() {
                 })}
               </div>
 
-              {q.en.explanation && (
+              {q.en?.explanation && (
                 <p className="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100">
                   <strong className="text-slate-700">Explanation:</strong> {q.en.explanation}
                 </p>
