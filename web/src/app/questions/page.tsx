@@ -108,13 +108,31 @@ export default function QuestionsPage() {
             const enObj = asRecord(data.en);
             const urObj = asRecord(data.ur);
             const romanObj = asRecord(data.roman);
+            const questionData = asRecord(data.question);
+            const optionsData = asRecord(data.options);
+            const correctAnsData = asRecord(data.correctAnswer);
+
+            const enQ = asText(enObj.question || questionData.en || data.questionText || data.question);
             const legacyOptions = [
               data.optionA || data.opt1 || "",
               data.optionB || data.opt2 || "",
               data.optionC || data.opt3 || "",
               data.optionD || data.opt4 || "",
             ];
-            const correctValue = Number(data.correct ?? data.correctOptionIndex ?? 0);
+            const enOpts = parseOptions(enObj.options || optionsData.en || data.options, legacyOptions);
+
+            let correctIdx = Number(data.correct ?? data.correctOptionIndex ?? 0);
+            const correctTextEn = asText(correctAnsData.en || data.correctAnswer);
+            if (correctTextEn && enOpts.length > 0) {
+              const foundIdx = enOpts.findIndex(opt => opt.toLowerCase().trim() === correctTextEn.toLowerCase().trim());
+              if (foundIdx !== -1) correctIdx = foundIdx;
+            }
+
+            const urQ = asText(urObj.question || questionData.ur);
+            const urOpts = parseOptions(urObj.options || optionsData.ur, ["", "", "", ""]);
+
+            const romanQ = asText(romanObj.question || questionData.romanUrdu || questionData.roman);
+            const romanOpts = parseOptions(romanObj.options || optionsData.romanUrdu || optionsData.roman, ["", "", "", ""]);
 
             allList.push({
               id: docSnap.id,
@@ -122,21 +140,21 @@ export default function QuestionsPage() {
               difficulty: asText(data.difficulty, "easy"),
               type: asText(data.type, "text"),
               mediaUrl: asText(data.mediaUrl || data.imageUrl || data.audioUrl || data.videoUrl),
-              correct: Number.isInteger(correctValue) && correctValue >= 0 ? correctValue : 0,
+              correct: Number.isInteger(correctIdx) && correctIdx >= 0 ? correctIdx : 0,
               isActive: typeof data.isActive === "boolean" ? data.isActive : true,
               en: {
-                question: asText(enObj.question) || asText(data.questionText) || asText(data.question),
-                options: parseOptions(enObj.options || data.options, legacyOptions),
-                explanation: asText(enObj.explanation) || asText(data.explanation),
+                question: enQ,
+                options: enOpts,
+                explanation: asText(enObj.explanation || data.explanation),
               },
               ur: {
-                question: asText(urObj.question),
-                options: parseOptions(urObj.options, ["", "", "", ""]),
+                question: urQ,
+                options: urOpts,
                 explanation: asText(urObj.explanation),
               },
               roman: {
-                question: asText(romanObj.question),
-                options: parseOptions(romanObj.options, ["", "", "", ""]),
+                question: romanQ,
+                options: romanOpts,
                 explanation: asText(romanObj.explanation),
               },
             });
@@ -283,40 +301,58 @@ export default function QuestionsPage() {
         jsonArray.forEach((q: any) => {
           const cat = asText(q.category, targetCat) || targetCat;
           const docRef = doc(collection(db, "questions", cat, "items"));
-          const enObj = asRecord(q.en);
-          const enQ = asText(enObj.question || q.questionText || q.question);
-          const opts = parseOptions(enObj.options || q.options, [q.optionA, q.optionB, q.optionC, q.optionD]);
-          const corr = Number(q.correct ?? q.correctOptionIndex ?? 0);
+
+          // Support Quiz.json schema (question.en, options.en, correctAnswer.en)
+          const qObj = asRecord(q.question);
+          const optsObj = asRecord(q.options);
+          const corrObj = asRecord(q.correctAnswer);
+
+          const enQ = asText(qObj.en || q.questionText || q.question);
+          const enOpts = parseOptions(optsObj.en || q.options, [q.optionA, q.optionB, q.optionC, q.optionD]);
+
+          let correctIdx = Number(q.correct ?? q.correctOptionIndex ?? 0);
+          const correctTextEn = asText(corrObj.en || corrObj);
+          if (correctTextEn && enOpts.length > 0) {
+            const foundIdx = enOpts.findIndex(opt => opt.toLowerCase().trim() === correctTextEn.toLowerCase().trim());
+            if (foundIdx !== -1) correctIdx = foundIdx;
+          }
+
+          const urQ = asText(qObj.ur);
+          const urOpts = parseOptions(optsObj.ur, ["", "", "", ""]);
+
+          const romanQ = asText(qObj.romanUrdu || qObj.roman);
+          const romanOpts = parseOptions(optsObj.romanUrdu || optsObj.roman, ["", "", "", ""]);
+
           const diff = asText(q.difficulty, "easy");
-          const qType = asText(q.type, "text");
           const imgUrl = asText(q.imageUrl || q.mediaUrl);
+          const qType = imgUrl ? "image" : asText(q.type, "text");
 
           batch.set(docRef, {
             category: cat,
             difficulty: diff,
             type: qType,
             mediaUrl: imgUrl,
-            correct: corr,
+            correct: correctIdx,
             isActive: true,
             en: {
               question: enQ,
-              options: opts,
-              explanation: asText(enObj.explanation || q.explanation),
+              options: enOpts,
+              explanation: asText(q.explanation),
             },
             ur: {
-              question: asText(q.ur?.question),
-              options: parseOptions(q.ur?.options, ["", "", "", ""]),
-              explanation: asText(q.ur?.explanation),
+              question: urQ,
+              options: urOpts,
+              explanation: "",
             },
             roman: {
-              question: asText(q.roman?.question),
-              options: parseOptions(q.roman?.options, ["", "", "", ""]),
-              explanation: asText(q.roman?.explanation),
+              question: romanQ,
+              options: romanOpts,
+              explanation: "",
             },
             questionText: enQ,
-            options: opts,
-            correctOptionIndex: corr,
-            explanation: asText(enObj.explanation || q.explanation),
+            options: enOpts,
+            correctOptionIndex: correctIdx,
+            explanation: asText(q.explanation),
             imageUrl: imgUrl,
           });
         });
@@ -799,7 +835,7 @@ export default function QuestionsPage() {
                 className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700"
               />
               <p className="text-[11px] text-slate-400 mt-2">
-                Supported JSON format: Array of objects with &quot;en&quot; (question, options, explanation), &quot;correct&quot;, &quot;difficulty&quot;, etc.
+                Supported JSON format: Array of objects with &quot;question&quot; (en, ur, romanUrdu), &quot;options&quot; (en, ur, romanUrdu), &quot;correctAnswer&quot;, &quot;difficulty&quot;, etc.
               </p>
             </div>
 
